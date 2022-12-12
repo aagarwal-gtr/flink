@@ -18,6 +18,8 @@
 
 package org.apache.flink.core.memory;
 
+import java.util.UUID;
+
 import org.apache.flink.testutils.serialization.types.SerializationTestType;
 import org.apache.flink.testutils.serialization.types.SerializationTestTypeFactory;
 import org.apache.flink.testutils.serialization.types.Util;
@@ -78,6 +80,19 @@ public class DataInputOutputSerializerTest {
 
             Assert.assertEquals(randomInt.length(), wrapper.position());
             Assert.assertEquals(randomInt.length(), wrapper.limit());
+        } catch (IOException e) {
+            e.printStackTrace();
+            Assert.fail("Test encountered an unexpected exception.");
+        }
+    }
+
+    @Test
+    public void testWriteBytes() {
+        DataOutputSerializer serializer = new DataOutputSerializer(1);
+        String randomStr = UUID.randomUUID().toString();
+        try {
+            serializer.writeBytes(randomStr);
+            Assert.assertEquals(randomStr.length(), serializer.length());
         } catch (IOException e) {
             e.printStackTrace();
             Assert.fail("Test encountered an unexpected exception.");
